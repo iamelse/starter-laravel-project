@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Dashboard\Http\Controllers\DashboardController;
-use Modules\Permissions\Enums\PermissionEnum;
+use Modules\Roles\Http\Controllers\RolesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +14,6 @@ use Modules\Permissions\Enums\PermissionEnum;
 |
 */
 
-Route::prefix('admin')->group(function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])
-            ->middleware(['redirect.if.not.authenticated', 'can:view_dashboard'])
-            ->name('dashboard.index');
+Route::group([], function () {
+    Route::resource('roles', RolesController::class)->names('roles');
 });
