@@ -62,6 +62,29 @@
                         </li>
                     </ul>
                 </li>
+
+                <li class="sidebar-title">Menu</li>
+
+                <li class="sidebar-item">
+                    <a href="{{ route('user.index') }}" class="sidebar-link">
+                        <i class="bx-sm bx bx-user"></i>
+                        <span>User</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="{{ route('permissions.index') }}" class="sidebar-link">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Permission</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="{{ route('roles.index') }}" class="sidebar-link">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Role</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

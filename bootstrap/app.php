@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureApiAuthenticated;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\RedirectIfNotAuthenticated;
 use Illuminate\Foundation\Application;
