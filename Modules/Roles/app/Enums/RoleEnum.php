@@ -5,13 +5,13 @@ namespace Modules\Roles\Enums;
 enum RoleEnum: string
 {
     case MASTER = 'Master';
-    case AUTHOR = 'Editor';
+    case AUTHOR = 'Author';
 
     public function label(): string
     {
         return match ($this) {
             static::MASTER => 'Master',
-            static::AUTHOR => 'Editor',
+            static::AUTHOR => 'Author',
         };
     }
 }

@@ -2,14 +2,19 @@
 
 namespace Modules\User\Http\Controllers\Web;
 
+use App\Constants\TableConstants;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTableSettingsRequest;
 use App\Models\TableSettings;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\ValidationException;
+use Modules\User\Http\Requests\UserStoreRequest;
 use Modules\User\Models\User;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -18,6 +23,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $roles = Role::all();
         $user = Auth::user();
         $savedSettings = $user->tableSettings;
 
@@ -29,21 +35,35 @@ class UserController extends Controller
         // Retrieve all columns and visible columns
         [$allColumns, $visibleColumns] = $this->_getColumnsForTable();
 
+        // Exclude 'roles' from the database query
+        $excludedColumns = ['roles'];
+        $queryColumns = array_diff($visibleColumns, $excludedColumns);
+
         $users = User::search(
             keyword: $request->q,
-            columns: $visibleColumns
-        )->sort(
+            columns: $queryColumns
+        )
+        ->sort(
             sort_by: $sortBy,
             sort_order: $sortOrder
-        )->paginate($limit);
-
+        );
+        
+        // Apply role filter if present
+        if ($role = $request->role) {
+            $users->whereHas('roles', fn($query) => $query->where('name', $role));
+        }
+        
+        // Paginate and transform the collection
+        $users = $users->paginate($limit)->through(fn($user) => $user->setAttribute('roles', $user->roles->pluck('name')->toArray()));
+        
         return view('user::index', [
             'title' => 'User List',
             'users' => $users,
             'columns' => $allColumns,
             'visibleColumns' => $visibleColumns,
-            'limits' => $limits
-        ]);
+            'limits' => $limits,
+            'roles' => $roles
+        ]);        
     }
 
     /**
@@ -51,15 +71,27 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user::create');
+        $roles = Role::all();
+
+        return view('user::create', [
+            'title' => 'New User',
+            'roles' => $roles
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        //
+        $userData = $request->all();
+        $userData['password'] = Hash::make($request->input('password'));
+
+        $user = User::create($userData);
+        $role = Role::findById($request->input('role_id'));
+        $user->assignRole($role->name);
+
+        return redirect()->route('user.index')->with('success', 'User created successfully.');
     }
 
     /**
@@ -106,7 +138,7 @@ class UserController extends Controller
     /**
      * Save table settings for the user.
      */
-    public function saveTableSettings(Request $request)
+    public function saveTableSettings(StoreTableSettingsRequest $request)
     {
         try {
             $modelClass = User::class;
@@ -114,12 +146,6 @@ class UserController extends Controller
     
             $tableName = $modelInstance->getTable();
             $modelName = get_class($modelInstance);
-    
-            $request->validate([
-                'columns' => 'array|min:1',
-                'columns.*' => 'string|in:' . implode(',', Schema::getColumnListing($modelInstance->getTable())),
-                'limit' => 'nullable|in:5,10,20,50,100',
-            ]);
     
             $columns = $request->input('columns', []);
             $showNumbering = $request->has('show_numbering') ? true : false;
@@ -138,6 +164,8 @@ class UserController extends Controller
             );
     
             return redirect()->back()->with('success', 'Table settings saved successfully!');
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             // Log the error and return a failure message
             Log::error('Error saving table settings: ' . $e->getMessage());
@@ -150,8 +178,7 @@ class UserController extends Controller
      */
     private function _getColumnsForTable(): array
     {
-        $table = (new User)->getTable();
-        $allColumns = Schema::getColumnListing($table);
+        $allColumns = TableConstants::USER_TABLE_COLUMNS;
 
         $visibleColumns = Auth::user()->tableSettings->visible_columns ?? $allColumns;
         $visibleColumns = is_array($visibleColumns) ? $visibleColumns : json_decode($visibleColumns);

@@ -62,9 +62,17 @@ class RolesDatabaseSeeder extends Seeder
         }
 
         // Optionally, assign a role to a specific user (e.g., user with ID 1)
-        $user = User::find(1);
-        if ($user) {
-            $user->assignRole(RoleEnum::MASTER->value); // Assign 'Master' role to user with ID 1
-        }
+        $roles = [RoleEnum::MASTER->value, RoleEnum::AUTHOR->value];
+
+        // Loop through 10 users and assign a random role
+        User::take(10)->get()->each(function ($user) use ($roles) {
+            // Randomly pick a role
+            $role = $roles[array_rand($roles)];
+            
+            // Assign the random role to the user
+            $user->assignRole($role);
+        });
+
+        User::find(1)->assignRole(RoleEnum::MASTER->value);
     }
 }

@@ -20,84 +20,12 @@
                 
                 <div class="card">
                     <div class="card-content">
-                        <div class="card-body">
-                            <form method="GET" action="{{ route('user.index') }}">
-                                <div class="row g-3 align-items-end">
-                                    <!-- Limit Dropdown -->
-                                    <div class="col-md-3">
-                                        <label for="limit" class="fw-bold">Limit:</label>
-                                        <select name="limit" class="form-select">
-                                            @foreach($limits as $limit)
-                                                <option value="{{ $limit }}" 
-                                                    {{ (request('limit') ?: Auth::user()->tableSettings->limit ?? 10) == $limit ? 'selected' : '' }}>
-                                                    {{ $limit }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                
-                                    <!-- Sort By Dropdown -->
-                                    <div class="col-md-3">
-                                        <label for="sort_by" class="fw-bold">Sort By:</label>
-                                        <select name="sort_by" class="form-select">
-                                            @foreach($visibleColumns as $column)
-                                                <option value="{{ $column }}" {{ request('sort_by') == $column ? 'selected' : '' }}>
-                                                    {{ ucfirst($column) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                
-                                    <!-- Order Dropdown -->
-                                    <div class="col-md-3">
-                                        <label for="sort_order" class="fw-bold">Order:</label>
-                                        <select name="sort_order" class="form-select">
-                                            <option value="ASC" {{ request('sort_order') == 'ASC' ? 'selected' : '' }}>Ascending</option>
-                                            <option value="DESC" {{ request('sort_order') == 'DESC' ? 'selected' : '' }}>Descending</option>
-                                        </select>
-                                    </div>
-                
-                                    <!-- Search Input -->
-                                    <div class="col-md-3">
-                                        <label for="search" class="fw-bold">Search:</label>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            placeholder="Search"
-                                            name="q"
-                                            value="{{ request('q') }}"
-                                        />
-                                    </div>
-                                </div>
-                
-                                <!-- Buttons for Apply Filters and Clear Filters -->
-                                <div class="row mt-3 g-2 justify-content-end">
-                                    <div class="col-md-2">
-                                        <button type="submit" class="btn btn-primary w-100">
-                                            Apply Filters
-                                        </button>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <a href="{{ route('user.index') }}" class="btn btn-secondary w-100">
-                                            Clear Filters
-                                        </a>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                                               
-
-                <div class="card">
-                    <div class="card-content">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5>Users List</h5>
+                        <div class="card-header d-flex justify-content-end align-items-center">
                             
                             <div class="d-flex align-items-center">
                                 <!-- Cog Icon as Modal Button -->
                                 <button type="button" class="btn border-0 p-0 me-3" data-bs-toggle="modal" data-bs-target="#tableSettingsModal">
-                                    <i class='bx bx-sm mt-2 bx-cog'></i>
+                                    <i class='bx bx-sm bx-cog'></i>
                                 </button>
 
                                 <!-- Modal for Table Settings -->
@@ -159,13 +87,108 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
+                                <button type="button" class="btn border-0 p-0 me-3" data-bs-toggle="modal" data-bs-target="#tableFiltersModal">
+                                    <i class='bx bx-sm bx-filter-alt'></i>
+                                </button>
+
+                                <!-- Modal for Filters -->
+                                <div class="modal fade" id="tableFiltersModal" tabindex="-1" aria-labelledby="tableFiltersModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="tableFiltersModalLabel">Table Filters</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="GET" action="{{ route('user.index') }}">
+                                                    <!-- Search Input -->
+                                                    <div class="mb-3">
+                                                        <label for="search" class="fw-bold">Search:</label>
+                                                        <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            placeholder="Search"
+                                                            name="q"
+                                                            value="{{ request('q') }}"
+                                                        />
+                                                    </div>
+                                                    
+                                                    <!-- Limit Dropdown -->
+                                                    <div class="mb-3">
+                                                        <label for="limit" class="fw-bold">Limit:</label>
+                                                        <select name="limit" class="form-select">
+                                                            @foreach($limits as $limit)
+                                                                <option value="{{ $limit }}" 
+                                                                    {{ (request('limit') ?: Auth::user()->tableSettings->limit ?? 10) == $limit ? 'selected' : '' }}>
+                                                                    {{ $limit }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Sort By Dropdown -->
+                                                    <div class="mb-3">
+                                                        <label for="sort_by" class="fw-bold">Sort By:</label>
+                                                        <select name="sort_by" class="form-select">
+                                                            @foreach($visibleColumns as $column)
+                                                                @if(!in_array($column, ['roles']))
+                                                                    <option value="{{ $column }}" {{ request('sort_by') == $column ? 'selected' : '' }}>
+                                                                        {{ ucfirst($column) }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Order Dropdown -->
+                                                    <div class="mb-3">
+                                                        <label for="sort_order" class="fw-bold">Order:</label>
+                                                        <select name="sort_order" class="form-select">
+                                                            <option value="ASC" {{ request('sort_order') == 'ASC' ? 'selected' : '' }}>Ascending</option>
+                                                            <option value="DESC" {{ request('sort_order') == 'DESC' ? 'selected' : '' }}>Descending</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Role Filter Dropdown -->
+                                                    <div class="mb-3">
+                                                        <label for="role" class="fw-bold">Role:</label>
+                                                        <select name="role" class="form-select">
+                                                            <option value="">All Roles</option> <!-- Option for no role filter -->
+                                                            @foreach($roles as $role)
+                                                                <option value="{{ $role->name }}" {{ request('role') == $role->name ? 'selected' : '' }}>
+                                                                    {{ ucfirst($role->name) }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Buttons for Apply Filters and Clear Filters -->
+                                                    <div class="row mt-3 g-2 justify-content-end">
+                                                        <div class="col-md-2">
+                                                            <button type="submit" class="btn btn-primary w-100">
+                                                                Apply Filters
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <a href="{{ route('user.index') }}" class="btn btn-secondary w-100">
+                                                                Clear Filters
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- New User Button -->
                                 @can('create_users', $users)
-                                <a href="{{ route('user.create') }}" class="btn btn-primary">
-                                    New User
+                                <a href="{{ route('user.create') }}" type="button" class="btn border-0 p-0 me-3">
+                                    <i class='bx bx-sm bx-plus-circle' ></i>
                                 </a>
                                 @endcan
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -189,27 +212,36 @@
                                             @if(Auth::user()->tableSettings->show_numbering ?? false)
                                                 <td class="text-bold-500">{{ $loop->iteration }}</td>
                                             @endif
-                                            @foreach ($visibleColumns as $visibleColumn)
-                                                <td>{{ $user->$visibleColumn }}</td>
+                                            @foreach ($visibleColumns as $column)
+                                                <td>
+                                                    {{ is_array($user->{$column}) ? implode(', ', $user->{$column}) : $user->{$column} }}
+                                                </td>
                                             @endforeach
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     @can('view_users', $user)
-                                                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-outline-warning">Edit</a>
+                                                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-outline-warning d-flex justify-content-center align-items-center p-0" style="width: 36px; height: 36px;">
+                                                        <i class="bx bx-edit"></i>
+                                                    </a>
                                                     @endcan
                                                     @can('view_users', $user)
-                                                    <form method="POST" action="{{ route('user.destroy', $user->id) }}">
+                                                    <form method="POST" action="{{ route('user.destroy', $user->id) }}" style="margin: 0;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger" id="delete-btn">Delete</button>
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center p-0" style="width: 36px; height: 36px;" id="delete-btn">
+                                                            <i class="bx bx-trash"></i>
+                                                        </button>
                                                     </form>
                                                     @endcan
                                                 </div>
-                                            </td>                                                
+                                            </td>                                                                                                                                        
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td class="text-center" colspan="5">No Data</td>
+                                            <!-- Calculate the colspan dynamically -->
+                                            <td class="text-center" colspan="{{ count($visibleColumns) + (Auth::user()->tableSettings->show_numbering ?? false ? 2 : 1) }}">
+                                                No Data
+                                            </td>
                                         </tr>
                                         @endforelse
                                     </tbody>
@@ -259,12 +291,28 @@
             });
         });
 
-        @if($errors->any())
+        let errorMessages = @json($errors->all());
+        console.log(errorMessages);
+
+        @if ($errors->any())
+            errorMessages.forEach((error) => {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: error,
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            });
+        @endif
+
+        @if (session('error'))
             Swal.fire({
                 toast: true,
                 position: 'top-end',
                 icon: 'error',
-                title: 'Oops, something went wrong.',
+                title: 'Oops, something went wrong...',
                 showConfirmButton: false,
                 timer: 3000
             });
