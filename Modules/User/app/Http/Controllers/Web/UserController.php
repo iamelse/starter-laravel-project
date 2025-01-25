@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Modules\User\Http\Requests\UserStoreRequest;
+use Modules\User\Http\Requests\UserUpdateRequest;
 use Modules\User\Models\User;
 use Spatie\Permission\Models\Role;
 
@@ -95,27 +96,41 @@ class UserController extends Controller
     }
 
     /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('user::show');
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        return view('user::edit');
+        return view('user::edit', [
+            'title' => 'Edit User',
+            'user' => $user,
+            'roles' => Role::all()
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        //
+        $user = User::findOrFail($user->id);
+
+        try {
+            $userData = $request->all();
+            if ($request->has('password')) {
+                $userData['password'] = Hash::make($request->input('password'));
+            }
+
+            $user->update($userData);
+            $role = Role::findById($request->input('role_id'));
+            $user->syncRoles([$role->name]);
+
+            $user->touch();
+
+            return redirect()->route('user.index')->with('success', 'User updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error updating user: ' . $e->getMessage());
+            return redirect()->route('user.index')->with('error', 'Failed to update the user.');
+        }
     }
 
     /**
