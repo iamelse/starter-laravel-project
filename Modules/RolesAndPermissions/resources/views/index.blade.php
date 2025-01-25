@@ -183,7 +183,7 @@
                                 </div>
 
                                 <!-- New User Button -->
-                                @can('can_create_roles_and_permissions', $roles)
+                                @can('create_roles_and_permissions', $roles)
                                 <a href="{{ route('roles.and.permissions.create') }}" type="button" class="btn border-0 p-0 me-3">
                                     <i class='bx bx-sm bx-plus-circle' ></i>
                                 </a>
@@ -202,7 +202,9 @@
                                             @foreach ($visibleColumns as $visibleColumn)
                                                 <th>{{ ucfirst(str_replace('_', ' ', $visibleColumn)) }}</th>
                                             @endforeach
-                                            <th>Action</th>
+                                            @if (Auth::user()->can('edit_roles_and_permissions') || Auth::user()->can('delete_roles_and_permissions'))
+                                                <th>Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -216,24 +218,26 @@
                                                     {{ is_array($role->{$column}) ? implode(', ', $role->{$column}) : $role->{$column} }}
                                                 </td>
                                             @endforeach
-                                            <td>
-                                                <div class="d-flex gap-2">
-                                                    @can('can_edit_roles_and_permissions', $role)
-                                                    <a href="{{ route('roles.and.permissions.edit', $role->id) }}" class="btn btn-sm btn-outline-warning">
-                                                        <i class="bx bx-edit"></i>
-                                                    </a>
-                                                    @endcan
-                                                    @can('can_delete_roles_and_permissions', $role)
-                                                    <form method="POST" action="{{ route('roles.and.permissions.destroy', $role->id) }}">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                            <i class="bx bx-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                    @endcan
-                                                </div>
-                                            </td>
+                                            @if (Auth::user()->can('edit_roles_and_permissions') || Auth::user()->can('delete_roles_and_permissions'))
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        @can('edit_roles_and_permissions', $role)
+                                                        <a href="{{ route('roles.and.permissions.edit', $role->id) }}" class="btn btn-sm btn-outline-warning">
+                                                            <i class="bx bx-edit"></i>
+                                                        </a>
+                                                        @endcan
+                                                        @can('delete_roles_and_permissions', $role)
+                                                        <form method="POST" action="{{ route('roles.and.permissions.destroy', $role->id) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                <i class="bx bx-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                        @endcan
+                                                    </div>
+                                                </td>
+                                            @endif
                                         </tr>
                                         @empty
                                         <tr>
