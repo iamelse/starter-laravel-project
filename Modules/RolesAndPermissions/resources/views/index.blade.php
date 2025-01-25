@@ -183,8 +183,8 @@
                                 </div>
 
                                 <!-- New User Button -->
-                                @can('create_roles', $roles)
-                                <a href="{{ route('user.create') }}" type="button" class="btn border-0 p-0 me-3">
+                                @can('can_create_roles_and_permissions', $roles)
+                                <a href="{{ route('roles.and.permissions.create') }}" type="button" class="btn border-0 p-0 me-3">
                                     <i class='bx bx-sm bx-plus-circle' ></i>
                                 </a>
                                 @endcan
@@ -218,13 +218,13 @@
                                             @endforeach
                                             <td>
                                                 <div class="d-flex gap-2">
-                                                    @can('view_roles', $role)
-                                                    <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-sm btn-outline-warning">
+                                                    @can('can_edit_roles_and_permissions', $role)
+                                                    <a href="{{ route('roles.and.permissions.edit', $role->id) }}" class="btn btn-sm btn-outline-warning">
                                                         <i class="bx bx-edit"></i>
                                                     </a>
                                                     @endcan
-                                                    @can('delete_roles', $role)
-                                                    <form method="POST" action="{{ route('roles.destroy', $role->id) }}">
+                                                    @can('can_delete_roles_and_permissions', $role)
+                                                    <form method="POST" action="{{ route('roles.and.permissions.destroy', $role->id) }}">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-sm btn-outline-danger">
