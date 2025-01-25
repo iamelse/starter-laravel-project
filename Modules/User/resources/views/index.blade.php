@@ -203,7 +203,9 @@
                                             @foreach ($visibleColumns as $visibleColumn)
                                                 <th>{{ ucfirst(str_replace('_', ' ', $visibleColumn)) }}</th>
                                             @endforeach
-                                            <th>Action</th>
+                                            @if (Auth::user()->can('edit_users') || Auth::user()->can('delete_users'))
+                                                <th>Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -219,12 +221,12 @@
                                             @endforeach
                                             <td>
                                                 <div class="d-flex gap-2">
-                                                    @can('view_users', $user)
+                                                    @can('edit_users', $user)
                                                     <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-outline-warning d-flex justify-content-center align-items-center p-0" style="width: 36px; height: 36px;">
                                                         <i class="bx bx-edit"></i>
                                                     </a>
                                                     @endcan
-                                                    @can('view_users', $user)
+                                                    @can('delete_users', $user)
                                                     <form method="POST" action="{{ route('user.destroy', $user->id) }}" style="margin: 0;">
                                                         @csrf
                                                         @method('DELETE')

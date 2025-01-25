@@ -20,13 +20,13 @@ class PermissionDatabaseSeeder extends Seeder
             ['name' => 'create_users', 'module' => 'users', 'guard_name' => 'web'],
             ['name' => 'edit_users', 'module' => 'users', 'guard_name' => 'web'],
             ['name' => 'delete_users', 'module' => 'users', 'guard_name' => 'web'],
-            ['name' => 'can_update_user_table_settings', 'module' => 'users', 'guard_name' => 'web'],
+            ['name' => 'update_user_table_settings', 'module' => 'users', 'guard_name' => 'web'],
 
-            ['name' => 'can_view_roles_and_permissions', 'module' => 'roles_and_permissions', 'guard_name' => 'web'],
-            ['name' => 'can_create_roles_and_permissions', 'module' => 'roles_and_permissions', 'guard_name' => 'web'],
-            ['name' => 'can_edit_roles_and_permissions', 'module' => 'roles_and_permissions', 'guard_name' => 'web'],
-            ['name' => 'can_delete_roles_and_permissions', 'module' => 'roles_and_permissions', 'guard_name' => 'web'],
-            ['name' => 'can_update_roles_and_permissions_table_settings', 'module' => 'roles_and_permissions', 'guard_name' => 'web'],
+            ['name' => 'view_roles_and_permissions', 'module' => 'roles_and_permissions', 'guard_name' => 'web'],
+            ['name' => 'create_roles_and_permissions', 'module' => 'roles_and_permissions', 'guard_name' => 'web'],
+            ['name' => 'edit_roles_and_permissions', 'module' => 'roles_and_permissions', 'guard_name' => 'web'],
+            ['name' => 'delete_roles_and_permissions', 'module' => 'roles_and_permissions', 'guard_name' => 'web'],
+            ['name' => 'update_roles_and_permissions_table_settings', 'module' => 'roles_and_permissions', 'guard_name' => 'web'],
         ];
 
         // Create permissions with the module and guard_name columns

@@ -19,14 +19,25 @@ Route::prefix('admin')->middleware(['redirect.if.not.authenticated'])->group(fun
         Route::get('/', [UserController::class, 'index'])
             ->middleware('can:view_users')
             ->name('user.index');
-        Route::get('create', [UserController::class, 'create'])->name('user.create');
-        Route::post('/', [UserController::class, 'store'])->name('user.store');
-        Route::get('{user}', [UserController::class, 'show'])->name('user.show');
-        Route::get('{user}/edit', [UserController::class, 'edit'])->name('user.edit');
-        Route::put('{user}', [UserController::class, 'update'])->name('user.update');
-        Route::delete('{user}', [UserController::class, 'destroy'])->name('user.destroy');
 
-        // Save table settings route within user prefix
+        Route::get('create', [UserController::class, 'create'])
+            ->middleware('can:view_users')
+            ->name('user.create');
+        Route::post('/', [UserController::class, 'store'])
+            ->middleware('can:view_users')
+            ->name('user.store');
+            
+        Route::get('{user}/edit', [UserController::class, 'edit'])
+            ->middleware('can:edit_users')
+            ->name('user.edit');
+        Route::put('{user}', [UserController::class, 'update'])
+            ->middleware('can:edit_users')
+            ->name('user.update');
+
+        Route::delete('{user}', [UserController::class, 'destroy'])
+            ->middleware('can:delete_users')     
+            ->name('user.destroy');
+
         Route::post('save-table-settings', [UserController::class, 'saveTableSettings'])
             ->middleware('can:view_users')
             ->name('user.save.table.settings');
