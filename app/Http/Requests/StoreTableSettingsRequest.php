@@ -2,10 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Helpers\TableHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Modules\User\Models\User;
 
 class StoreTableSettingsRequest extends FormRequest
 {
@@ -24,15 +22,10 @@ class StoreTableSettingsRequest extends FormRequest
      */
     public function rules(): array
     {
-        $modelClass = User::class;
-        $modelInstance = app($modelClass)->newInstance();
-        $tableName = $modelInstance->getTable();
-        
         return [
             'columns' => ['required', 'array', 'min:1'],
             'columns.*' => [
-                'string',
-                Rule::in(TableHelper::getColumnsForTable($tableName)),
+                'string'
             ],
             'limit' => ['nullable', Rule::in([5, 10, 20, 50, 100])],
         ];

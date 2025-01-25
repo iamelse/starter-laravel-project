@@ -63,6 +63,7 @@ class UserController extends Controller
             'users' => $users,
             'columns' => $allColumns,
             'visibleColumns' => $visibleColumns,
+            'excludedSortColumns' => $excludedColumns,
             'limits' => $limits,
             'roles' => $roles,
             'savedSettings' => $savedSettings

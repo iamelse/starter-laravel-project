@@ -132,7 +132,7 @@
                                                         <label for="sort_by" class="fw-bold">Sort By:</label>
                                                         <select name="sort_by" class="form-select">
                                                             @foreach($visibleColumns as $column)
-                                                                @if(!in_array($column, ['roles']))
+                                                                @if(!in_array($column, $excludedSortColumns))
                                                                     <option value="{{ $column }}" {{ request('sort_by') == $column ? 'selected' : '' }}>
                                                                         {{ ucfirst($column) }}
                                                                     </option>
@@ -215,7 +215,13 @@
                                             @endif
                                             @foreach ($visibleColumns as $column)
                                                 <td>
-                                                    {{ is_array($role->{$column}) ? implode(', ', $role->{$column}) : $role->{$column} }}
+                                                    @if($column === 'permissions' && is_array($role->permissions))
+                                                        @foreach ($role->permissions as $permission)
+                                                            <span class="badge bg-primary my-1">{{ $permission }}</span>
+                                                        @endforeach
+                                                    @else
+                                                        {{ is_array($role->{$column}) ? implode(', ', $role->{$column}) : $role->{$column} }}
+                                                    @endif
                                                 </td>
                                             @endforeach
                                             @if (Auth::user()->can('edit_roles_and_permissions') || Auth::user()->can('delete_roles_and_permissions'))

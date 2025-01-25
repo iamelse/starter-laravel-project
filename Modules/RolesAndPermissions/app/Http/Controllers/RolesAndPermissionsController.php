@@ -30,7 +30,7 @@ class RolesAndPermissionsController extends Controller
         [$allColumns, $visibleColumns] = $this->_getColumnsForTable();
 
         // Exclude '' from the database query
-        $excludedColumns = [''];
+        $excludedColumns = ['permissions'];
         $queryColumns = array_diff($visibleColumns, $excludedColumns);
 
         $roles = Role::search(
@@ -42,12 +42,13 @@ class RolesAndPermissionsController extends Controller
             sort_order: $sortOrder
         );
 
-        $roles = $roles->paginate($limit);
+        $roles = $roles->paginate($limit)->through(fn($role) => $role->setAttribute('permissions', $role->permissions->pluck('name')->toArray()));
     
         return view('rolesandpermissions::index', [
             'title' => 'Role and Permission List',
             'columns' => $allColumns,
             'visibleColumns' => $visibleColumns,
+            'excludedSortColumns' => $excludedColumns,
             'limits' => $limits,
             'roles' => $roles,
             'savedSettings' => $savedSettings

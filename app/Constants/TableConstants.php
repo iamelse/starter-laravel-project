@@ -18,6 +18,7 @@ class TableConstants
     public const ROLE_AND_PERMISSION_TABLE_COLUMNS = [
         'id', 
         'name',
+        'permissions',
         'created_at', 
         'updated_at',
     ];

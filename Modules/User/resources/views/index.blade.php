@@ -132,7 +132,7 @@
                                                         <label for="sort_by" class="fw-bold">Sort By:</label>
                                                         <select name="sort_by" class="form-select">
                                                             @foreach($visibleColumns as $column)
-                                                                @if(!in_array($column, ['roles']))
+                                                                @if(!in_array($column, $excludedSortColumns))
                                                                     <option value="{{ $column }}" {{ request('sort_by') == $column ? 'selected' : '' }}>
                                                                         {{ ucfirst($column) }}
                                                                     </option>
