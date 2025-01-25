@@ -171,10 +171,19 @@ class RolesAndPermissionsController extends Controller
         $modelInstance = app($modelClass)->newInstance();
         $tableName = $modelInstance->getTable();
 
+        // Check if Auth::user()->tableSettings is null
+        $userTableSettings = Auth::user()->tableSettings;
+
+        if (is_null($userTableSettings)) {
+            return null;
+        }
+
         // Retrieve user's table settings for the given model and table
-        return Auth::user()->tableSettings
+        $tableSettings = $userTableSettings
             ->where('model_name', $modelClass)
             ->where('table_name', $tableName)
             ->first();
+
+        return $tableSettings;
     }
 }

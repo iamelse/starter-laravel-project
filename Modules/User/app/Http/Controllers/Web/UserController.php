@@ -195,16 +195,8 @@ class UserController extends Controller
     {
         $allColumns = TableConstants::USER_TABLE_COLUMNS;
 
-        // Get the Role model instance and table name
-        $modelClass = User::class;
-        $modelInstance = app($modelClass)->newInstance();
-        $tableName = $modelInstance->getTable();
-
-        // Retrieve user's table settings for the current table
-        $tableSettings = Auth::user()->tableSettings
-            ->where('model_name', $modelClass)
-            ->where('table_name', $tableName)
-            ->first();
+        // Use the reusable function to get table settings
+        $tableSettings = $this->_getTableSettingsForModel(User::class);
 
         // Extract visible columns or use default if not set
         $visibleColumns = $tableSettings->visible_columns ?? $allColumns;
@@ -221,10 +213,19 @@ class UserController extends Controller
         $modelInstance = app($modelClass)->newInstance();
         $tableName = $modelInstance->getTable();
 
+        // Check if Auth::user()->tableSettings is null
+        $userTableSettings = Auth::user()->tableSettings;
+
+        if (is_null($userTableSettings)) {
+            return null;
+        }
+
         // Retrieve user's table settings for the given model and table
-        return Auth::user()->tableSettings
+        $tableSettings = $userTableSettings
             ->where('model_name', $modelClass)
             ->where('table_name', $tableName)
             ->first();
+
+        return $tableSettings;
     }
 }

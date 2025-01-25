@@ -26,7 +26,7 @@ Route::prefix('admin')->middleware(['redirect.if.not.authenticated'])->group(fun
 
         // Save table settings route within roles-and-permissions prefix
         Route::post('save-table-settings', [RolesAndPermissionsController::class, 'saveTableSettings'])
-            ->middleware('can:can_update_roles_table_settings')
+            ->middleware('can:can_update_roles_and_permissions_table_settings')
             ->name('roles.and.permissions.save.table.settings');
     });
 });
