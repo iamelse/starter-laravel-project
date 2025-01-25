@@ -124,8 +124,6 @@ class UserController extends Controller
             $role = Role::findById($request->input('role_id'));
             $user->syncRoles([$role->name]);
 
-            $user->touch();
-
             return redirect()->route('user.index')->with('success', 'User updated successfully.');
         } catch (\Exception $e) {
             Log::error('Error updating user: ' . $e->getMessage());
