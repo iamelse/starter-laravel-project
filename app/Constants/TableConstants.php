@@ -15,5 +15,12 @@ class TableConstants
         'updated_at',
     ];
 
+    public const ROLE_AND_PERMISSION_TABLE_COLUMNS = [
+        'id', 
+        'name',
+        'created_at', 
+        'updated_at',
+    ];
+
     // Add more table columns as needed
 }

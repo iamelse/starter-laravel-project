@@ -73,7 +73,7 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="" class="sidebar-link">
+                    <a href="{{ route('roles.and.permissions.index') }}" class="sidebar-link">
                         <i class="bx bx-sm bx-key"></i>
                         <span>Roles and Permission</span>
                     </a>

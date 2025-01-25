@@ -6,8 +6,8 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3>Users</h3>
-                    <p class="text-subtitle text-muted">View and manage all users.</p>
+                    <h3>Roles and Permissions</h3>
+                    <p class="text-subtitle text-muted">Manage roles, permissions, and access levels.</p>
                 </div>
             </div>
         </div>        
@@ -37,7 +37,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="POST" action="{{ route('user.save.table.settings') }}">
+                                                <form method="POST" action="{{ route('roles.and.permissions.save.table.settings') }}">
                                                     @csrf
                                                     <!-- Columns Visibility -->
                                                     <h6 class="fw-bold">Columns Visibility</h6>
@@ -183,7 +183,7 @@
                                 </div>
 
                                 <!-- New User Button -->
-                                @can('create_users', $users)
+                                @can('create_roles', $roles)
                                 <a href="{{ route('user.create') }}" type="button" class="btn border-0 p-0 me-3">
                                     <i class='bx bx-sm bx-plus-circle' ></i>
                                 </a>
@@ -192,7 +192,6 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <!-- Table with outer spacing -->
                             <div class="table-responsive">
                                 <table class="table table-lg">
                                     <thead>
@@ -207,126 +206,53 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($users as $user)
+                                        @forelse ($roles as $role)
                                         <tr>
                                             @if($savedSettings->show_numbering ?? false)
                                                 <td class="text-bold-500">{{ $loop->iteration }}</td>
                                             @endif
                                             @foreach ($visibleColumns as $column)
                                                 <td>
-                                                    {{ is_array($user->{$column}) ? implode(', ', $user->{$column}) : $user->{$column} }}
+                                                    {{ is_array($role->{$column}) ? implode(', ', $role->{$column}) : $role->{$column} }}
                                                 </td>
                                             @endforeach
                                             <td>
                                                 <div class="d-flex gap-2">
-                                                    @can('view_users', $user)
-                                                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-outline-warning d-flex justify-content-center align-items-center p-0" style="width: 36px; height: 36px;">
+                                                    @can('view_roles', $role)
+                                                    <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-sm btn-outline-warning">
                                                         <i class="bx bx-edit"></i>
                                                     </a>
                                                     @endcan
-                                                    @can('view_users', $user)
-                                                    <form method="POST" action="{{ route('user.destroy', $user->id) }}" style="margin: 0;">
+                                                    @can('delete_roles', $role)
+                                                    <form method="POST" action="{{ route('roles.destroy', $role->id) }}">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center p-0" style="width: 36px; height: 36px;" id="delete-btn">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
                                                             <i class="bx bx-trash"></i>
                                                         </button>
                                                     </form>
                                                     @endcan
                                                 </div>
-                                            </td>                                                                                                                                        
+                                            </td>
                                         </tr>
                                         @empty
                                         <tr>
-                                            <!-- Calculate the colspan dynamically -->
-                                            <td class="text-center" colspan="{{ count($visibleColumns) + ($savedSettings->show_numbering ?? false ? 2 : 1) }}">
-                                                No Data
-                                            </td>
+                                            <td colspan="{{ count($visibleColumns) + 2 }}" class="text-center">No roles found.</td>
                                         </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- Pagination links -->
-                            <div class="row">
-                                <div class="col-12 d-flex justify-content-end">
-                                    {{ $users->withQueryString()->links() }}
-                                </div>
-                            </div>                
+                        </div>
+                        <div class="card-footer">
+                            {{ $roles->links() }}
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
-    </section>        
+    </section>
     <!-- Basic Tables end -->
 </div>
 @endsection
-
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-        const deleteButtons = document.querySelectorAll('#delete-btn');
-
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function (e) {
-                e.preventDefault();
-                const form = this.closest('form');
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    customClass: {
-                        confirmButton: 'btn btn-primary mx-1',
-                        cancelButton: 'btn btn-danger mx-1'
-                    },
-                    buttonsStyling: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        });
-
-        let errorMessages = @json($errors->all());
-        console.log(errorMessages);
-
-        @if ($errors->any())
-            errorMessages.forEach((error) => {
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'error',
-                    title: error,
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-            });
-        @endif
-
-        @if (session('error'))
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'error',
-                title: 'Oops, something went wrong...',
-                showConfirmButton: false,
-                timer: 3000
-            });
-        @endif
-
-        @if(session('success'))
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title: '{{ session('success') }}',
-                showConfirmButton: false,
-                timer: 3000
-            });
-        @endif
-</script>
-@endpush

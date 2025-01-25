@@ -10,6 +10,7 @@ class TableHelper
     {
         $columns = [
             'users' => TableConstants::USER_TABLE_COLUMNS,
+            'roles_and_permissions' => TableConstants::ROLE_AND_PERMISSION_TABLE_COLUMNS,
             // Add other tables here
         ];
 
