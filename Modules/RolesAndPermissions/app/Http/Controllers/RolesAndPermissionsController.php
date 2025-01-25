@@ -45,7 +45,7 @@ class RolesAndPermissionsController extends Controller
         $roles = $roles->paginate($limit);
     
         return view('rolesandpermissions::index', [
-            'title' => 'User List',
+            'title' => 'Role and Permission List',
             'columns' => $allColumns,
             'visibleColumns' => $visibleColumns,
             'limits' => $limits,
