@@ -9,9 +9,13 @@
         "php": "^8.2",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
-        "nwidart/laravel-modules": "^11.1"
+        "nwidart/laravel-modules": "^11.1",
+        "opcodesio/log-viewer": "^3.14",
+        "spatie/laravel-permission": "^6.10",
+        "yogameleniawan/search-sort-eloquent": "^1.2"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.14",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",
@@ -25,7 +29,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/TableHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
