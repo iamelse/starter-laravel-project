@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Modules\RolesAndPermissions\Models\Role;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Permission;
 
 class RolesAndPermissionsController extends Controller
 {
@@ -60,7 +61,12 @@ class RolesAndPermissionsController extends Controller
      */
     public function create()
     {
-        return view('rolesandpermissions::create');
+        $permissions = Permission::all()->groupBy('module');
+
+        return view('rolesandpermissions::create', [
+            'title' => 'Create Role and Permission',
+            'permissions' => $permissions
+        ]);
     }
 
     /**
@@ -68,39 +74,92 @@ class RolesAndPermissionsController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        try {
+            $validated = $request->validate([
+                'role_name' => 'required|string|max:255',
+                'permissions' => 'required|array',
+                'permissions.*' => 'integer|exists:permissions,id',
+            ]);
 
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('rolesandpermissions::show');
+            $role = Role::create([
+                'name' => $request->input('role_name'),
+                'guard_name' => 'web',
+            ]);
+
+            $role->permissions()->attach($validated['permissions']);
+
+            return redirect()->route('roles.and.permissions.index')->with('success', 'Role and permission created successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error creating role and permissions: ' . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all(),
+            ]);
+
+            return back()->withErrors(['error' => 'An error occurred while creating the role. Please try again later.']);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(Role $role_and_permission)
     {
-        return view('rolesandpermissions::edit');
+        $permissions = Permission::all()->groupBy('module');
+        $role = Role::findOrFail($role_and_permission->id);
+        $rolePermissions = $role_and_permission->permissions->pluck('id')->toArray();
+
+        return view('rolesandpermissions::edit', [
+            'title' => 'Edit Role and Permission',
+            'permissions' => $permissions,
+            'role' => $role,
+            'rolePermissions' => $rolePermissions
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Role $role_and_permission)
     {
-        //
+        try {
+            $request->validate([
+                'role_name' => 'required|string|max:255',
+                'permissions' => 'array',
+                'permissions.*' => 'exists:permissions,id',
+            ]);
+
+            $role_and_permission->update(['name' => $request->input('role_name')]);
+            $role_and_permission->permissions()->sync($request->input('permissions', []));
+
+            return redirect()->route('roles.and.permissions.index')->with('success', 'Role and permission updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error updating role and permissions: ' . $e->getMessage(), [
+                'exception' => $e,
+                'role_id' => $role_and_permission->id,
+                'request' => $request->all(),
+            ]);
+
+            return back()->withErrors(['error' => 'An error occurred while updating the role. Please try again later.']);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Role $role_and_permission)
     {
-        //
+        try {
+            $role_and_permission->delete();
+
+            return redirect()->route('roles.and.permissions.index')->with('success', 'Role and permission deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting role and permissions: ' . $e->getMessage(), [
+                'exception' => $e,
+                'role_id' => $role_and_permission->id,
+            ]);
+
+            return back()->withErrors(['error' => 'An error occurred while deleting the role. Please try again later.']);
+        }
     }
 
     /**

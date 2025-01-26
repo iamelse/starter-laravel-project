@@ -236,7 +236,7 @@
                                                         <form method="POST" action="{{ route('roles.and.permissions.destroy', $role->id) }}">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center p-0" style="width: 36px; height: 36px;" id="delete-btn">
                                                                 <i class="bx bx-trash"></i>
                                                             </button>
                                                         </form>
@@ -266,3 +266,71 @@
     <!-- Basic Tables end -->
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+        const deleteButtons = document.querySelectorAll('#delete-btn');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                const form = this.closest('form');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    customClass: {
+                        confirmButton: 'btn btn-primary mx-1',
+                        cancelButton: 'btn btn-danger mx-1'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        let errorMessages = @json($errors->all());
+        console.log(errorMessages);
+
+        @if ($errors->any())
+            errorMessages.forEach((error) => {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: error,
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Oops, something went wrong...',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        @endif
+
+        @if(session('success'))
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        @endif
+</script>
+@endpush
