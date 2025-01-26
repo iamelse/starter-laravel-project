@@ -18,28 +18,28 @@ Route::prefix('admin')->middleware(['redirect.if.not.authenticated'])->group(fun
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])
             ->middleware('can:view_users')
-            ->name('user.index');
+            ->name('users.index');
 
         Route::get('create', [UserController::class, 'create'])
             ->middleware('can:view_users')
-            ->name('user.create');
+            ->name('users.create');
         Route::post('/', [UserController::class, 'store'])
             ->middleware('can:view_users')
-            ->name('user.store');
+            ->name('users.store');
             
         Route::get('{user}/edit', [UserController::class, 'edit'])
             ->middleware('can:edit_users')
-            ->name('user.edit');
+            ->name('users.edit');
         Route::put('{user}', [UserController::class, 'update'])
             ->middleware('can:edit_users')
-            ->name('user.update');
+            ->name('users.update');
 
         Route::delete('{user}', [UserController::class, 'destroy'])
             ->middleware('can:delete_users')     
-            ->name('user.destroy');
+            ->name('users.destroy');
 
         Route::post('save-table-settings', [UserController::class, 'saveTableSettings'])
             ->middleware('can:view_users')
-            ->name('user.save.table.settings');
+            ->name('users.save.table.settings');
     });
 });

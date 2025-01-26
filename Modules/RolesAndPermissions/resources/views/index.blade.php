@@ -101,7 +101,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="GET" action="{{ route('user.index') }}">
+                                                <form method="GET" action="{{ route('roles.and.permissions.index') }}">
                                                     <!-- Search Input -->
                                                     <div class="mb-3">
                                                         <label for="search" class="fw-bold">Search:</label>
@@ -171,7 +171,7 @@
                                                             </button>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <a href="{{ route('user.index') }}" class="btn btn-secondary w-100">
+                                                            <a href="{{ route('roles.and.permissions.index') }}" class="btn btn-secondary w-100">
                                                                 Clear Filters
                                                             </a>
                                                         </div>
@@ -228,7 +228,7 @@
                                                 <td>
                                                     <div class="d-flex gap-2">
                                                         @can('edit_roles_and_permissions', $role)
-                                                        <a href="{{ route('roles.and.permissions.edit', $role->id) }}" class="btn btn-sm btn-outline-warning">
+                                                        <a href="{{ route('roles.and.permissions.edit', $role->id) }}" class="btn btn-sm btn-outline-warning d-flex justify-content-center align-items-center p-0" style="width: 36px; height: 36px;">
                                                             <i class="bx bx-edit"></i>
                                                         </a>
                                                         @endcan

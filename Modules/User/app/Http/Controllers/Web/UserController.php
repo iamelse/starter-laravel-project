@@ -95,7 +95,7 @@ class UserController extends Controller
         $role = Role::findById($request->input('role_id'));
         $user->assignRole($role->name);
 
-        return redirect()->route('user.index')->with('success', 'User created successfully.');
+        return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
     /**
@@ -127,10 +127,10 @@ class UserController extends Controller
             $role = Role::findById($request->input('role_id'));
             $user->syncRoles([$role->name]);
 
-            return redirect()->route('user.index')->with('success', 'User updated successfully.');
+            return redirect()->route('users.index')->with('success', 'User updated successfully.');
         } catch (\Exception $e) {
             Log::error('Error updating user: ' . $e->getMessage());
-            return redirect()->route('user.index')->with('error', 'Failed to update the user.');
+            return redirect()->route('users.index')->with('error', 'Failed to update the user.');
         }
     }
 
@@ -141,13 +141,13 @@ class UserController extends Controller
     {
         try {
             User::findOrFail($user->id)->delete();
-            return redirect()->route('user.index')->with('success', 'User deleted successfully.');
+            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
         } catch (ModelNotFoundException $e) {
             Log::error('User not found: ' . $e->getMessage());
-            return redirect()->route('user.index')->with('error', 'User not found.');
+            return redirect()->route('users.index')->with('error', 'User not found.');
         } catch (\Exception $e) {
             Log::error('Error deleting user: ' . $e->getMessage());
-            return redirect()->route('user.index')->with('error', 'Failed to delete the user.');
+            return redirect()->route('users.index')->with('error', 'Failed to delete the user.');
         }
     }
 

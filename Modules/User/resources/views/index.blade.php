@@ -37,7 +37,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="POST" action="{{ route('user.save.table.settings') }}">
+                                                <form method="POST" action="{{ route('users.save.table.settings') }}">
                                                     @csrf
                                                     <!-- Columns Visibility -->
                                                     <h6 class="fw-bold">Columns Visibility</h6>
@@ -101,7 +101,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="GET" action="{{ route('user.index') }}">
+                                                <form method="GET" action="{{ route('users.index') }}">
                                                     <!-- Search Input -->
                                                     <div class="mb-3">
                                                         <label for="search" class="fw-bold">Search:</label>
@@ -171,7 +171,7 @@
                                                             </button>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <a href="{{ route('user.index') }}" class="btn btn-secondary w-100">
+                                                            <a href="{{ route('users.index') }}" class="btn btn-secondary w-100">
                                                                 Clear Filters
                                                             </a>
                                                         </div>
@@ -184,7 +184,7 @@
 
                                 <!-- New User Button -->
                                 @can('create_users', $users)
-                                <a href="{{ route('user.create') }}" type="button" class="btn border-0 p-0 me-3">
+                                <a href="{{ route('users.create') }}" type="button" class="btn border-0 p-0 me-3">
                                     <i class='bx bx-sm bx-plus-circle' ></i>
                                 </a>
                                 @endcan
@@ -223,12 +223,12 @@
                                                 <td>
                                                     <div class="d-flex gap-2">
                                                         @can('edit_users', $user)
-                                                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-outline-warning d-flex justify-content-center align-items-center p-0" style="width: 36px; height: 36px;">
+                                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-outline-warning d-flex justify-content-center align-items-center p-0" style="width: 36px; height: 36px;">
                                                             <i class="bx bx-edit"></i>
                                                         </a>
                                                         @endcan
                                                         @can('delete_users', $user)
-                                                        <form method="POST" action="{{ route('user.destroy', $user->id) }}" style="margin: 0;">
+                                                        <form method="POST" action="{{ route('users.destroy', $user->id) }}" style="margin: 0;">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-sm btn-outline-danger d-flex justify-content-center align-items-center p-0" style="width: 36px; height: 36px;" id="delete-btn">

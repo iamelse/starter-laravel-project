@@ -36,6 +36,20 @@
                             
                                 <div class="form-group mandatory mb-4">
                                     <label class="form-label">Permissions</label>
+                                    <div class="d-flex justify-content-between mb-3 align-items-center">
+                                        <!-- Global Action Dropdown -->
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="globalActions" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Global Actions
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="globalActions">
+                                                <li><a class="dropdown-item select-all-global" href="#">Select All</a></li>
+                                                <li><a class="dropdown-item deselect-all-global" href="#">Deselect All</a></li>
+                                                <li><a class="dropdown-item expand-all" href="#">Expand All</a></li>
+                                                <li><a class="dropdown-item collapse-all" href="#">Collapse All</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                     
                                     @foreach($permissions as $module => $modulePermissions)
                                         <div class="mb-4">
@@ -47,6 +61,15 @@
                                                     aria-controls="module-{{ Str::slug($module) }}">
                                                     {{ ucfirst($module) }}
                                                 </button>
+                                                <div class="dropdown ms-2">
+                                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="moduleActions-{{ Str::slug($module) }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Actions
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="moduleActions-{{ Str::slug($module) }}">
+                                                        <li><a class="dropdown-item select-all-module" href="#" data-module="{{ Str::slug($module) }}">Select All</a></li>
+                                                        <li><a class="dropdown-item deselect-all-module" href="#" data-module="{{ Str::slug($module) }}">Deselect All</a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                             
                                             <!-- Collapsible Permissions -->

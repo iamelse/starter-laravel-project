@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
-                            <form method="POST" action="{{ route('user.store') }}">
+                            <form method="POST" action="{{ route('users.store') }}">
                                 @csrf
 
                                 <div class="form-group mandatory mb-3">

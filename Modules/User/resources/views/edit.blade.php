@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
-                            <form method="POST" action="{{ route('user.update', $user->id) }}">
+                            <form method="POST" action="{{ route('users.update', $user->id) }}">
                                 @csrf
                                 @method('PUT') <!-- Use PUT for updates -->
 
@@ -29,9 +29,11 @@
                                     <select class="form-control @error('role_id') is-invalid @enderror" id="role_id" name="role_id">
                                         <option value="" disabled>Choose role...</option>
                                         @foreach($roles as $role)
-                                            <option value="{{ $role->id }}" {{ $user->role_id == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
+                                            <option value="{{ $role->id }}" {{ $user->roles->pluck('id')->contains($role->id) ? 'selected' : '' }}>
+                                                {{ $role->name }}
+                                            </option>
                                         @endforeach
-                                    </select>
+                                    </select>                                                                       
                                     @error('role_id')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -82,7 +84,7 @@
     
                                 <div class="row">
                                     <div class="col-12 d-flex justify-content-end">
-                                        <a href="{{ route('user.index') }}" class="btn btn-light-secondary me-1 mb-1">Cancel</a>
+                                        <a href="{{ route('users.index') }}" class="btn btn-light-secondary me-1 mb-1">Cancel</a>
                                         <button type="submit" class="btn btn-primary me-1 mb-1">Update</button>
                                     </div>
                                 </div>
