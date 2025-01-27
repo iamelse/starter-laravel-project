@@ -16,6 +16,9 @@ class RoleDatabaseSeeder extends Seeder
         // Define roles and their permissions
         $roles = [
             'Master' => [
+                'view_profile',
+                'update_profile',
+                
                 'view_dashboard',
                 
                 'view_users',

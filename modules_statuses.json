@@ -2,5 +2,6 @@
     "User": true,
     "Auth": true,
     "Dashboard": true,
-    "RolesAndPermissions": true
+    "RolesAndPermissions": true,
+    "Profile": true
 }

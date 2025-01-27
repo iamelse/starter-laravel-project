@@ -14,6 +14,9 @@ class PermissionDatabaseSeeder extends Seeder
     {
         // Define permissions with module and guard_name columns
         $permissions = [
+            ['name' => 'view_profile', 'module' => 'profile', 'guard_name' => 'web'],
+            ['name' => 'update_profile', 'module' => 'profile', 'guard_name' => 'web'],
+
             ['name' => 'view_dashboard', 'module' => 'dashboard', 'guard_name' => 'web'],
             
             ['name' => 'view_users', 'module' => 'users', 'guard_name' => 'web'],
