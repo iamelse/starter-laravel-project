@@ -69,7 +69,7 @@
                         </div>
                         <div class="user-img d-flex align-items-center">
                             <div class="avatar avatar-md">
-                                <img src="{{ asset('mazer/assets/compiled/jpg/1.jpg') }}">
+                                <img src="{{ getUserImageProfilePath(Auth::user()) }}">
                             </div>
                         </div>
                     </div>
@@ -78,8 +78,12 @@
                     <li>
                         <h6 class="dropdown-header">Hello, {{ strtok(Auth::user()->name, " ") }}!</h6>
                     </li>
-                    <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-person me-2"></i> My
-                            Profile</a></li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('show.profile', ['username' => Auth::user()->username ]) }}">
+                            <i class="icon-mid bi bi-person me-2"></i>
+                            My Profile
+                        </a>
+                    </li>
                     <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-gear me-2"></i>
                             Settings</a></li>
                     <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-wallet me-2"></i>
