@@ -31,7 +31,9 @@ class AuthController extends Controller
             return redirect()->route('dashboard.index');
         }
 
-        return redirect()->back()->with('error', 'Invalid credentials');
+        return back()->withErrors([
+            'identity' => 'Your provided credentials do not match our records.',
+        ])->onlyInput('identity');
     }
 
     public function logout(Request $request)

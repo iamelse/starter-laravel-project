@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\User\Http\Controllers\Web;
+namespace Modules\User\Http\Controllers;
 
 use App\Constants\TableConstants;
 use App\Http\Controllers\Controller;

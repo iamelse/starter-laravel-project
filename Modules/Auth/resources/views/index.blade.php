@@ -14,13 +14,23 @@
 
                     <form action="{{ route('auth.login') }}" method="POST">
                         @csrf
-                        
+                    
+                        <!-- General Session Error Message -->
+                        @session('error')
+                            <div class="alert alert-danger mb-3">
+                                <p class="fw-bold" style="font-size: 0.85rem;">
+                                    * {{ session('error') }}
+                                </p>
+                            </div>
+                        @endsession
+                    
                         <!-- Identity Field -->
                         <div class="form-group position-relative has-icon-left mb-4">
                             <input 
                                 type="text" 
                                 name="identity" 
-                                class="form-control form-control-lg @error('identity') is-invalid @enderror" 
+                                class="form-control form-control-lg 
+                                    @error('identity') is-invalid @enderror" 
                                 placeholder="Email or Username" 
                                 value="{{ old('identity') }}">
                             <div class="form-control-icon">
@@ -56,7 +66,7 @@
                         <button type="submit" class="btn btn-primary btn-block btn-md shadow-md mt-3 py-2">
                             Log in
                         </button>
-                    </form>
+                    </form>                                        
                 </div>
             </div>
 
